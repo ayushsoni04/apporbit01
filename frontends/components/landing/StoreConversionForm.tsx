@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { FadeUp } from "@/components/animation";
 import { ConvertMyStoreButton, ShopifyStoreUrlInput } from "@/components/ui";
 
 const SELL_ICON =
@@ -10,7 +11,7 @@ export function StoreConversionForm() {
   const [storeName, setStoreName] = useState("");
 
   return (
-    <div className="relative flex flex-col items-center gap-8">
+    <FadeUp delay={1.05} className="relative flex flex-col items-center gap-8">
       <div className="absolute -left-20 -translate-y-1/2 rotate-[-10.65deg]">
         <div className="flex items-center justify-center gap-1.5 rounded border border-[#3b82f6] bg-white px-2 py-2">
           <img src={SELL_ICON} alt="" className="h-3.5 w-3.5" />
@@ -26,6 +27,6 @@ export function StoreConversionForm() {
         />
         <ConvertMyStoreButton />
       </div>
-    </div>
+    </FadeUp>
   );
 }

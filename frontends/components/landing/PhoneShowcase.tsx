@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { gsap, registerGsapPlugins } from "@/lib/gsap";
 
 const HEADER_OFFSET = 86;
 const FRAME_WIDTH = 1365.574;
@@ -64,20 +65,6 @@ const PHONES = [
     height: SMALL_HEIGHT,
   },
 ] as const;
-
-function clamp(value: number, min: number, max: number) {
-  return Math.min(max, Math.max(min, value));
-}
-
-function lerp(start: number, end: number, progress: number) {
-  return start + (end - start) * progress;
-}
-
-function easeInOutCubic(progress: number) {
-  return progress < 0.5
-    ? 4 * progress * progress * progress
-    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-}
 
 function JohnPhoneMockup({ alt }: { alt: string }) {
   return (
@@ -234,9 +221,25 @@ function CenterPhoneMockup({ alt }: { alt: string }) {
   );
 }
 
+function PhoneMockup({ id, alt }: { id: (typeof PHONES)[number]["id"]; alt: string }) {
+  switch (id) {
+    case "center":
+      return <CenterPhoneMockup alt={alt} />;
+    case "john":
+      return <JohnPhoneMockup alt={alt} />;
+    case "monito":
+      return <MonitoPhoneMockup alt={alt} />;
+    case "jet":
+      return <JetPhoneMockup alt={alt} />;
+    case "jason":
+      return <JasonPhoneMockup alt={alt} />;
+  }
+}
+
 export function PhoneShowcase() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [progress, setProgress] = useState(0);
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const phoneRefs = useRef<Partial<Record<(typeof PHONES)[number]["id"], HTMLDivElement>>>({});
   const [viewportScale, setViewportScale] = useState(1);
   const [viewportHeight, setViewportHeight] = useState(800);
 
@@ -252,42 +255,78 @@ export function PhoneShowcase() {
     return () => window.removeEventListener("resize", updateLayout);
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    registerGsapPlugins();
+
     const section = sectionRef.current;
-    if (!section) return;
+    const scene = sceneRef.current;
+    if (!section || !scene) return;
 
-    const updateProgress = () => {
-      const rect = section.getBoundingClientRect();
-      const scrollableDistance = section.offsetHeight - viewportHeight;
+    const scale = viewportScale;
+    const vh = viewportHeight;
 
-      if (scrollableDistance <= 0) {
-        setProgress(0);
-        return;
-      }
+    const initialCenterHeight = CENTER_HEIGHT * CENTER_INITIAL_SCALE;
+    const startSceneOffset =
+      (vh / scale - initialCenterHeight) / 2 + CENTER_START_OFFSET_Y;
+    const endSceneOffset = (vh / scale - FRAME_HEIGHT_END) / 2;
 
-      const scrolled = clamp(-rect.top, 0, scrollableDistance);
-      setProgress(scrolled / scrollableDistance);
-    };
+    const ctx = gsap.context(() => {
+      gsap.set(scene, { y: startSceneOffset * scale });
 
-    updateProgress();
-    window.addEventListener("scroll", updateProgress, { passive: true });
-    window.addEventListener("resize", updateProgress);
-    return () => {
-      window.removeEventListener("scroll", updateProgress);
-      window.removeEventListener("resize", updateProgress);
-    };
-  }, [viewportHeight]);
+      PHONES.forEach((phone) => {
+        const el = phoneRefs.current[phone.id];
+        if (!el) return;
 
-  const easedProgress = easeInOutCubic(progress);
-  const centerScale = lerp(CENTER_INITIAL_SCALE, CENTER_SCALE_END, easedProgress);
+        const x = phone.x * scale;
+        const isCenter = phone.id === "center";
 
-  const initialCenterHeight = CENTER_HEIGHT * CENTER_INITIAL_SCALE;
-  const startSceneOffset =
-    (viewportHeight / viewportScale - initialCenterHeight) / 2 +
-    CENTER_START_OFFSET_Y;
-  const endSceneOffset =
-    (viewportHeight / viewportScale - FRAME_HEIGHT_END) / 2;
-  const sceneOffsetY = lerp(startSceneOffset, endSceneOffset, easedProgress);
+        gsap.set(el, {
+          top: phone.startY * scale,
+          width: phone.width * scale,
+          height: phone.height * scale,
+          xPercent: -50,
+          x,
+          scale: isCenter ? CENTER_INITIAL_SCALE : 1,
+          transformOrigin: isCenter ? "top center" : "center center",
+          zIndex: isCenter ? 30 : 10,
+        });
+      });
+
+      const timeline = gsap.timeline({
+        defaults: { ease: "power3.inOut" },
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 0.75,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      timeline.to(
+        scene,
+        { y: endSceneOffset * scale, duration: 1 },
+        0,
+      );
+
+      PHONES.forEach((phone) => {
+        const el = phoneRefs.current[phone.id];
+        if (!el) return;
+
+        timeline.to(
+          el,
+          {
+            top: phone.endY * scale,
+            scale: phone.id === "center" ? CENTER_SCALE_END : 1,
+            duration: 1,
+          },
+          0,
+        );
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, [viewportScale, viewportHeight]);
 
   return (
     <section
@@ -297,53 +336,24 @@ export function PhoneShowcase() {
     >
       <div className="sticky top-[86px] flex h-[calc(100vh-86px)] items-start justify-center overflow-hidden px-6">
         <div
+          ref={sceneRef}
           className="relative will-change-transform"
           style={{
             width: FRAME_WIDTH * viewportScale,
             height: FRAME_HEIGHT_END * viewportScale,
-            transform: `translateY(${sceneOffsetY * viewportScale}px)`,
           }}
         >
-          {PHONES.map((phone) => {
-            const y = lerp(phone.startY, phone.endY, easedProgress) * viewportScale;
-            const x = phone.x * viewportScale;
-            const width = phone.width * viewportScale;
-            const height = phone.height * viewportScale;
-            const isCenter = phone.id === "center";
-            const isMonito = phone.id === "monito";
-            const isJet = phone.id === "jet";
-            const isJohn = phone.id === "john";
-            const zIndex = isCenter ? 30 : 10;
-
-            return (
-              <div
-                key={phone.id}
-                className="absolute left-1/2 overflow-visible"
-                style={{
-                  top: y,
-                  width,
-                  height,
-                  transform: isCenter
-                    ? `translateX(calc(-50% + ${x}px)) scale(${centerScale})`
-                    : `translateX(calc(-50% + ${x}px))`,
-                  transformOrigin: isCenter ? "top center" : "center center",
-                  zIndex,
-                }}
-              >
-                {isCenter ? (
-                  <CenterPhoneMockup alt={phone.alt} />
-                ) : isJohn ? (
-                  <JohnPhoneMockup alt={phone.alt} />
-                ) : isMonito ? (
-                  <MonitoPhoneMockup alt={phone.alt} />
-                ) : isJet ? (
-                  <JetPhoneMockup alt={phone.alt} />
-                ) : (
-                  <JasonPhoneMockup alt={phone.alt} />
-                )}
-              </div>
-            );
-          })}
+          {PHONES.map((phone) => (
+            <div
+              key={phone.id}
+              ref={(el) => {
+                if (el) phoneRefs.current[phone.id] = el;
+              }}
+              className="absolute left-1/2 overflow-visible"
+            >
+              <PhoneMockup id={phone.id} alt={phone.alt} />
+            </div>
+          ))}
         </div>
       </div>
     </section>
