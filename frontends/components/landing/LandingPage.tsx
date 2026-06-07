@@ -4,7 +4,8 @@ import { HeroHeadline } from "./HeroHeadline";
 import { HeroTagline } from "./HeroTagline";
 import { Features } from "./Features";
 import { AppImpact } from "./AppImpact";
-import { PhoneMockup } from "./PhoneMockup";
+import { FeatureHighlights } from "./FeatureHighlights";
+import { PhoneShowcase } from "./PhoneShowcase";
 import { Pricing } from "./Pricing";
 import { StoreConversionForm } from "./StoreConversionForm";
 import { TrustBadge } from "./TrustBadge";
@@ -31,9 +32,8 @@ export function LandingPage() {
             </div>
           </div>
         </section>
-        <section className="flex justify-center px-6 pb-24 pt-16">
-          <PhoneMockup />
-        </section>
+        <PhoneShowcase />
+        <FeatureHighlights />
         {/* <Features /> */}
         <AppImpact />
         <Pricing />

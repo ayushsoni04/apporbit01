@@ -1,10 +1,12 @@
 export { Header } from "./Header";
 export { HeroBadge } from "./HeroBadge";
 export { HeroHeadline } from "./HeroHeadline";
+export { FeatureHighlights } from "./FeatureHighlights";
 export { Features } from "./Features";
 export { HeroTagline } from "./HeroTagline";
 export { LandingPage } from "./LandingPage";
 export { PhoneMockup } from "./PhoneMockup";
+export { PhoneShowcase } from "./PhoneShowcase";
 export { Pricing } from "./Pricing";
 export { StoreConversionForm } from "./StoreConversionForm";
 export { TrustBadge } from "./TrustBadge";
