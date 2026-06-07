@@ -10,7 +10,9 @@ const CENTER_WIDTH = 396;
 const CENTER_HEIGHT = 808;
 const SMALL_WIDTH = 234.574;
 const SMALL_HEIGHT = 478.666;
+const CENTER_INITIAL_SCALE = 1.14;
 const CENTER_SCALE_END = SMALL_WIDTH / CENTER_WIDTH;
+const CENTER_START_OFFSET_Y = -64;
 
 const INNER_ROW_WIDTH = 812;
 const OUTER_ROW_WIDTH = FRAME_WIDTH;
@@ -38,7 +40,6 @@ const PHONES = [
   },
   {
     id: "center",
-    src: "/phone/phone-center.png",
     alt: "Nebulla shopping app preview",
     x: 0,
     startY: 0,
@@ -80,6 +81,37 @@ function easeInOutCubic(progress: number) {
   return progress < 0.5
     ? 4 * progress * progress * progress
     : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+}
+
+function CenterPhoneMockup({ alt }: { alt: string }) {
+  return (
+    <div className="relative size-full overflow-visible">
+      <div className="pointer-events-none absolute inset-[0_-62%_-16%_0] overflow-visible">
+        <img
+          src="/phone/phone-center-shadow.png"
+          alt=""
+          className="absolute left-0 top-0 size-full max-w-none object-cover object-left"
+          draggable={false}
+        />
+      </div>
+      <div className="absolute inset-[1.9%_5%_2.1%_5%] overflow-hidden rounded-[26px] bg-white">
+        <img
+          src="/phone/phone-center-screen.png"
+          alt={alt}
+          className="absolute inset-0 size-full object-cover object-top"
+          draggable={false}
+        />
+      </div>
+      <div className="pointer-events-none absolute inset-x-0 bottom-[1%] top-0">
+        <img
+          src="/phone/phone-center-frame.png"
+          alt=""
+          className="size-full object-contain object-top"
+          draggable={false}
+        />
+      </div>
+    </div>
+  );
 }
 
 export function PhoneShowcase() {
@@ -127,11 +159,12 @@ export function PhoneShowcase() {
   }, [viewportHeight]);
 
   const easedProgress = easeInOutCubic(progress);
-  const centerScale = lerp(1, CENTER_SCALE_END, easedProgress);
+  const centerScale = lerp(CENTER_INITIAL_SCALE, CENTER_SCALE_END, easedProgress);
 
-  const scaledCenterHeight = CENTER_HEIGHT * centerScale;
+  const initialCenterHeight = CENTER_HEIGHT * CENTER_INITIAL_SCALE;
   const startSceneOffset =
-    (viewportHeight / viewportScale - scaledCenterHeight) / 2;
+    (viewportHeight / viewportScale - initialCenterHeight) / 2 +
+    CENTER_START_OFFSET_Y;
   const endSceneOffset =
     (viewportHeight / viewportScale - FRAME_HEIGHT_END) / 2;
   const sceneOffsetY = lerp(startSceneOffset, endSceneOffset, easedProgress);
@@ -162,7 +195,7 @@ export function PhoneShowcase() {
             return (
               <div
                 key={phone.id}
-                className="absolute left-1/2"
+                className="absolute left-1/2 overflow-visible"
                 style={{
                   top: y,
                   width,
@@ -174,12 +207,16 @@ export function PhoneShowcase() {
                   zIndex,
                 }}
               >
-                <img
-                  src={phone.src}
-                  alt={phone.alt}
-                  className="h-full w-full object-contain object-top drop-shadow-[0_24px_48px_rgba(0,0,0,0.18)]"
-                  draggable={false}
-                />
+                {isCenter ? (
+                  <CenterPhoneMockup alt={phone.alt} />
+                ) : (
+                  <img
+                    src={phone.src}
+                    alt={phone.alt}
+                    className="h-full w-full object-contain object-top drop-shadow-[0_24px_48px_rgba(0,0,0,0.18)]"
+                    draggable={false}
+                  />
+                )}
               </div>
             );
           })}

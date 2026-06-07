@@ -35,11 +35,37 @@ function IntegrationCard() {
         Connects Seemlesly With Shopify And Its Plugins
       </h3>
 
-      <img
-        src="/features/shopify-integrations.png"
-        alt="Shopify integrations with Stripe, Klaviyo, and Mailchimp"
-        className="pointer-events-none absolute bottom-0 left-1/2 w-full max-w-[520px] -translate-x-1/2 object-contain"
-      />
+      <div className="pointer-events-none absolute left-1/2 top-[167px] h-[619px] w-[554px] -translate-x-1/2">
+        <img
+          src="/features/integration-arcs-v2.png"
+          alt=""
+          className="absolute left-1/2 top-0 h-[619px] w-[614px] max-w-none -translate-x-1/2"
+        />
+        <div className="absolute -left-5 top-[39px] h-[189px] w-[596px]">
+          <img
+            src="/features/integration-shopify.png"
+            alt="Shopify"
+            className="absolute left-[60px] top-[29px] h-[32px] w-[85px] object-contain"
+          />
+          <img
+            src="/features/integration-klaviyo.png"
+            alt="Klaviyo"
+            className="absolute left-[145px] top-[99px] h-[74px] w-[131px] object-contain"
+          />
+          <div className="absolute left-[316px] top-0 flex h-[78px] w-[75px] items-center justify-center">
+            <img
+              src="/features/integration-stripe.png"
+              alt="Stripe"
+              className="h-[61px] w-[54px] rotate-[24.7deg] object-contain"
+            />
+          </div>
+          <img
+            src="/features/integration-mailchimp.png"
+            alt="Mailchimp"
+            className="absolute left-[454px] top-[121px] h-[30px] w-[101px] object-contain"
+          />
+        </div>
+      </div>
     </FeatureCard>
   );
 }
@@ -114,24 +140,33 @@ function ApkOwnershipCard() {
 
 function LivePreviewCard() {
   return (
-    <FeatureCard className="flex h-[828px] flex-col items-center">
-      <div className="flex w-full max-w-[514px] flex-col items-center gap-[59px]">
-        <h3 className="text-center font-display text-[34px] font-medium leading-tight text-black">
+    <FeatureCard className="flex h-[828px] w-full flex-col items-center">
+      <div className="flex h-[826px] w-full max-w-[515px] flex-col items-center gap-[59px]">
+        <h3 className="w-full font-display text-[34px] font-medium leading-tight text-black">
           Live Preview In
           <br />
           Under 10 Seconds
         </h3>
 
-        <div className="relative mx-auto h-[620px] w-[300px] shrink-0">
-          <img
-            src="/phone/phone-jason.png"
-            alt="Live app preview on phone"
-            className="h-full w-full object-contain object-top drop-shadow-[0_24px_48px_rgba(0,0,0,0.15)]"
-          />
+        <div className="relative aspect-[639/1051] w-[639px] max-w-[calc(100vw-80px)] shrink-0">
+          <div className="absolute left-[13.77%] top-[2.86%] h-[55.91%] w-[71.96%] overflow-hidden rounded-[34px]">
+            <img
+              src="/features/live-preview-screen.png"
+              alt="Live app preview"
+              className="size-full object-cover object-top"
+            />
+          </div>
+          <div className="absolute inset-x-[9.7%] bottom-[1.01%] top-0 pointer-events-none">
+            <img
+              src="/features/live-preview-frame.png"
+              alt=""
+              className="size-full object-contain object-top"
+            />
+          </div>
         </div>
       </div>
 
-      <CardFade className="h-[123px]" />
+      <div className="pointer-events-none absolute bottom-[-4px] left-[-4px] h-[123px] w-[calc(100%+8px)] bg-gradient-to-b from-transparent to-white" />
     </FeatureCard>
   );
 }
