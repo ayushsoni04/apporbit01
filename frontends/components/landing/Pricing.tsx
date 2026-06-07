@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { ScrollReveal, StaggerItem, StaggerReveal, WordReveal } from "@/components/animation";
 
 const PLANS = [
   {
@@ -141,19 +144,28 @@ export function Pricing() {
       className="scroll-mt-[100px] py-16 font-sans md:py-24"
     >
       <div className="mx-auto flex max-w-[1280px] flex-col items-center gap-10 px-6 md:gap-[42px]">
-        <h2 className="max-w-[900px] text-center font-display text-4xl font-medium leading-[1.05] tracking-[-0.02em] text-black md:text-5xl lg:text-[56px] lg:leading-[1.08]">
-          Own Your App Without Owning A Monthly Bill
-        </h2>
+        <WordReveal
+          text="Own Your App Without Owning A Monthly Bill"
+          as="h2"
+          className="max-w-[900px] text-center font-display text-4xl font-medium leading-[1.05] tracking-[-0.02em] text-black md:text-5xl lg:text-[56px] lg:leading-[1.08]"
+          triggerOnScroll
+          stagger={0.05}
+        />
 
-        <CurrencySelect />
+        <ScrollReveal delay={0.1}>
+          <CurrencySelect />
+        </ScrollReveal>
 
-        <div className="flex w-full flex-col items-stretch justify-center gap-6 lg:flex-row lg:items-start lg:gap-8 xl:gap-[33px]">
+        <StaggerReveal
+          className="flex w-full flex-col items-stretch justify-center gap-6 lg:flex-row lg:items-start lg:gap-8 xl:gap-[33px]"
+          stagger={0.14}
+        >
           {PLANS.map((plan) => {
             if (plan.featured) {
               return (
-                <div
+                <StaggerItem
                   key={plan.id}
-                  className="relative mx-auto  flex w-full max-w-[404px] flex-col lg:mx-0 lg:mt-0"
+                  className="relative mx-auto flex w-full max-w-[404px] flex-col lg:mx-0 lg:mt-0"
                 >
                   <div className="bg-[#3B82F6] rounded-[25px] py-3 flex-col ">
                     <p className="text-white text-center text-xl font-medium ">
@@ -203,14 +215,14 @@ export function Pricing() {
                       </Link>
                     </div>
                   </div>
-                </div>
+                </StaggerItem>
               );
             }
 
             return (
-              <div
+              <StaggerItem
                 key={plan.id}
-                className="mx-auto flex w-full max-w-[382px] flex-col btn-gradient-1 bg-white p-8  md:min-h-[560px] lg:mx-0 lg:mt-[40px]"
+                className="btn-gradient-1 mx-auto flex w-full max-w-[382px] flex-col bg-white p-8 md:min-h-[560px] lg:mx-0 lg:mt-[40px]"
               >
                 <div className="flex flex-1 flex-col gap-8">
                   <div className="inline-flex w-fit items-center  px-3 py-2">
@@ -248,10 +260,10 @@ export function Pricing() {
                   Convert My Store
                   <CtaChevron className="text-black" />
                 </Link>
-              </div>
+              </StaggerItem>
             );
           })}
-        </div>
+        </StaggerReveal>
       </div>
     </section>
   );

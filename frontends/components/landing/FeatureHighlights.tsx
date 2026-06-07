@@ -1,3 +1,7 @@
+"use client";
+
+import { StaggerItem, StaggerReveal, WordReveal } from "@/components/animation";
+
 const DOT_GRID_STYLE = {
   backgroundImage: "radial-gradient(circle, #d9d9d9 1px, transparent 1px)",
   backgroundSize: "18px 18px",
@@ -31,9 +35,13 @@ function CardFade({ className = "" }: { className?: string }) {
 function IntegrationCard() {
   return (
     <FeatureCard className="h-[398px]">
-      <h3 className="max-w-[452px] font-display text-[34px] font-medium leading-tight text-black">
-        Connects Seemlesly With Shopify And Its Plugins
-      </h3>
+      <WordReveal
+        text="Connects Seemlesly With Shopify And Its Plugins"
+        as="h3"
+        className="max-w-[452px] font-display text-[34px] font-medium leading-tight text-black"
+        triggerOnScroll
+        stagger={0.05}
+      />
 
       <div className="pointer-events-none absolute left-1/2 top-[167px] h-[619px] w-[554px] -translate-x-1/2">
         <img
@@ -74,9 +82,13 @@ function ApkOwnershipCard() {
   return (
     <FeatureCard className="h-[398px]">
       <div className="flex h-full flex-col gap-8">
-        <h3 className="max-w-[396px] font-display text-[34px] font-medium leading-tight text-black">
-          Your App. Your APK. Own It Forever.
-        </h3>
+        <WordReveal
+          text="Your App. Your APK. Own It Forever."
+          as="h3"
+          className="max-w-[396px] font-display text-[34px] font-medium leading-tight text-black"
+          triggerOnScroll
+          stagger={0.05}
+        />
 
         <div className="rounded-xl border-4 border-[rgba(194,194,194,0.28)] bg-white/90 px-3 py-[18px] backdrop-blur-[24px]">
           <div className="flex flex-col gap-4">
@@ -142,11 +154,13 @@ function LivePreviewCard() {
   return (
     <FeatureCard className="flex h-[828px] w-full flex-col items-center">
       <div className="flex h-[826px] w-full max-w-[515px] flex-col items-center gap-[59px]">
-        <h3 className="w-full font-display text-[34px] font-medium leading-tight text-black">
-          Live Preview In
-          <br />
-          Under 10 Seconds
-        </h3>
+        <WordReveal
+          text="Live Preview In Under 10 Seconds"
+          as="h3"
+          className="w-full font-display text-[34px] font-medium leading-tight text-black"
+          triggerOnScroll
+          stagger={0.05}
+        />
 
         <div className="relative aspect-[639/1051] w-[639px] max-w-[calc(100vw-80px)] shrink-0">
           <div className="absolute left-[13.77%] top-[2.86%] h-[55.91%] w-[71.96%] overflow-hidden rounded-[34px]">
@@ -174,15 +188,19 @@ function LivePreviewCard() {
 export function FeatureHighlights() {
   return (
     <section className="px-6 py-16 md:py-24">
-      <div className="mx-auto flex w-full max-w-[1231px] flex-col gap-8 lg:flex-row lg:items-start lg:gap-8">
+      <StaggerReveal className="mx-auto flex w-full max-w-[1231px] flex-col gap-8 lg:flex-row lg:items-start lg:gap-8">
         <div className="flex w-full max-w-[600px] flex-col gap-8">
-          <IntegrationCard />
-          <ApkOwnershipCard />
+          <StaggerItem>
+            <IntegrationCard />
+          </StaggerItem>
+          <StaggerItem>
+            <ApkOwnershipCard />
+          </StaggerItem>
         </div>
-        <div className="w-full max-w-[599px] lg:shrink-0">
+        <StaggerItem className="w-full max-w-[599px] lg:shrink-0">
           <LivePreviewCard />
-        </div>
-      </div>
+        </StaggerItem>
+      </StaggerReveal>
     </section>
   );
 }

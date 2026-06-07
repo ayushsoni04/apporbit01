@@ -1,3 +1,7 @@
+"use client";
+
+import { ScrollReveal, StaggerItem, StaggerReveal, WordReveal } from "@/components/animation";
+
 const HERO_SHADOW_IMAGE =
   "https://www.figma.com/api/mcp/asset/3bb36fc7-03ef-4c37-8f5a-93b843d89938";
 const HERO_SCREEN_IMAGE =
@@ -86,30 +90,35 @@ export function AppImpact() {
   return (
     <section className="py-16 md:py-24">
       <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-14 px-6">
-        <h2 className="mx-auto max-w-[620px] text-center font-display text-4xl font-medium leading-[1.05] tracking-[-0.03em] text-black md:text-6xl">
-          What Having An App Does For You
-        </h2>
+        <WordReveal
+          text="What Having An App Does For You"
+          as="h2"
+          className="mx-auto max-w-[620px] text-center font-display text-4xl font-medium leading-[1.05] tracking-[-0.03em] text-black md:text-6xl"
+          triggerOnScroll
+          stagger={0.06}
+        />
 
-        <img src="/phone/phoneEndCTA.png" className="w-1/2 mx-auto p-6" alt="phone cta" />
+        <ScrollReveal>
+          <img src="/phone/phoneEndCTA.png" className="mx-auto w-1/2 p-6" alt="phone cta" />
+        </ScrollReveal>
 
-        <div className="grid gap-[26px] md:grid-cols-2 xl:grid-cols-3">
+        <StaggerReveal className="grid gap-[26px] md:grid-cols-2 xl:grid-cols-3" stagger={0.08}>
           {FEATURE_CARDS.map((feature, index) => (
-            <article
-              key={feature.title}
-              className="rounded-[26px] border border-[#e6e6ea] bg-white p-[22px] shadow-[0_8px_24px_rgba(10,10,15,0.04)]"
-            >
-              <FeaturePreview index={index} />
-              <div className="mt-5">
-                <h3 className="font-display text-xl font-medium leading-[1.06] tracking-[-0.02em] text-black">
-                  {feature.title}
-                </h3>
-                <p className="mt-3 text-lg  leading-[1.4] text-black">
-                  {feature.description}
-                </p>
-              </div>
-            </article>
+            <StaggerItem key={feature.title}>
+              <article className="rounded-[26px] border border-[#e6e6ea] bg-white p-[22px] shadow-[0_8px_24px_rgba(10,10,15,0.04)]">
+                <FeaturePreview index={index} />
+                <div className="mt-5">
+                  <h3 className="font-display text-xl font-medium leading-[1.06] tracking-[-0.02em] text-black">
+                    {feature.title}
+                  </h3>
+                  <p className="mt-3 text-lg leading-[1.4] text-black">
+                    {feature.description}
+                  </p>
+                </div>
+              </article>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerReveal>
       </div>
     </section>
   );
